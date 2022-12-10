@@ -1,11 +1,30 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
-
+//whenever we have schema we use prisma generate command
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "mongodb"
   url      = env("DATABASE_URL")
+}
+//we can define our models here
+model User {
+  id    String @id @default(auto()) @map("_id") @db.ObjectId 
+  //auto() - auto incremented
+  //map('_id') - map to id of the object
+  name  String? //optional 
+  email  String @unique
+  password String
+  posts Post[]
+}
+
+model Post {
+  id     String @id @default(auto()) @map("_id") @db.ObjectId
+  slug String
+  title String
+  body String
+  author   User   @relation(fields: [authorId], references: [id])
+  authorId String @db.ObjectId
 }
