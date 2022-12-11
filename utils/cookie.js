@@ -6,7 +6,7 @@ const cookieToken = (user,res)=>{
     const token  = getJWT(user.id)
     //prepare the options
     const options = {
-        expire:new Date(Date.now() + 3 *24 * 60 *60 * 1000),
+        expires:new Date(Date.now() + 3 *24 * 60 *60 * 1000),
         httpOnly: true
     }
     //overwrite i.e to not send the user the password
