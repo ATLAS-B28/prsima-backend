@@ -52,7 +52,7 @@ const deletePost = async (req,res,next)=>{
     try {
         const result = await prsima.post.delete({
             where:{
-                id
+                id:id
             }
         })
         res.json(result)

@@ -1,28 +1,29 @@
 //checks whether we are logged in or not
-const prsima = require('../prsima/index')
+const prisma = require('../prsima/index')
+
 const jwt = require('jsonwebtoken')
-const isLoggedIn = async (req,res,next)=>{
+
+const isLoggedIn = async(req, res, next) => {
     try {
-        //verify the token
-        const token = req.cookie.tokens
-        if(!token){
-            res.send('Please Login')
-            throw new Error('You are not logged in')
+       const token = req.cookies.token
+
+        if (!token) {
+            res.send('Please login')
+            throw new Error('You are not logged in') // send a response and close next
         }
-        //if token present
-        //so decode it 
-        //use jwt secert
-        const decodeToken = jwt.verify(token,process.env.JWT_SEC)
-        //then take the payload of name and everything 
-        //check whether the user exits or not
-        req.user = await prsima.user.findUnique({
-            where:{
-                id:decodeToken.userId //this comes from getjwt.js 
+
+        const decoded = jwt.verify(token, process.env.JWT_SEC)
+        req.user = await prisma.user.findUnique({
+            where: {
+                id: decoded.userId
             }
         })
+        //you can do more checks
         next()
-    } catch (error) {
-        throw new Error(`${error}`)
+
+    } catch(error){
+        
     }
 }
+
 module.exports = isLoggedIn
